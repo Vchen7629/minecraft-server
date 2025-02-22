@@ -1,5 +1,8 @@
 minecraft-data
 .env
+enigmatica
+manifest.json
+modlist.html
 
 # Terraform files
 .terraform/
