@@ -6,8 +6,12 @@ services:
     ports:
       - "25565:25565"
     environment:
+      TYPE: AUTO_CURSEFORGE
+      CF_API_KEY: ${CF_API_KEY}
+      CF_PAGE_URL: "https://www.curseforge.com/minecraft/modpacks/crazy-craft-updated"
       EULA: "TRUE"
-      MEMORY: "6G"
+      MEMORY: "3G"
       VERSION: "1.16.5"
     volumes:
       - ../minecraft-data:/data
+    restarts: on-failure-3
