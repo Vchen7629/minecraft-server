@@ -5,10 +5,11 @@ services:
     stdin_open: true
     ports:
       - "25565:25565"
+      - "19565:19565"
     environment:
       TYPE: forge
       EULA: "TRUE"
-      MEMORY: "8G"
+      MEMORY: "6G"
       VERSION: "1.12.2"
       FORGE_VERSION: "14.23.5.2860"
       JVM_XX_OPTS: >-
@@ -26,11 +27,44 @@ services:
         -XX:SurvivorRatio=32
         -XX:+PerfDisableSharedMem
         -XX:MaxTenuringThreshold=1
+      OPS: |
+        Laserdrago
+      TZ: PST
     volumes:
       - ../enigmatica:/data
     restart: on-failure
-    mem_limit: 10G
-    mem_reservation: 8G
+    mem_limit: 8G
+    mem_reservation: 6G
     cpus: 6
-    OPS: |
-      Laserdrago
+    networks:
+      minecraft:
+        aliases:
+          - minecraft
+  prometheus:
+    image: bitnami/prometheus
+    tty: true
+    stdin_open: true
+    ports:
+      - "9090:9090"
+    volumes:
+      - ../monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: on-failure
+    networks:
+      minecraft:
+        aliases:
+          - prometheus
+  grafana:
+    image: grafana/grafana
+    tty: true
+    stdin_open: true
+    ports:
+      - "3000:3000"
+    restart: on-failure
+    networks:
+      minecraft:
+        aliases:
+          - grafana
+
+networks:
+  minecraft:
+    name: minecraft
