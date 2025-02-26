@@ -1,1 +1,17 @@
-name
+- name: Debug current directory
+  debug:
+    msg: "Current directory is {{ lookup('pipe', 'pwd') }}"
+
+- name: Read token from file
+  slurp:
+    src: "../grafana-token.txt"
+  register: grafana_token_file
+
+- name: Add Minecraft Prometheus Datasource to Grafana Dashboard
+  community.grafana.grafana_datasource: 
+    name: "Minecraft Prometheus Datasource"
+    ds_type: "prometheus"
+    ds_url: "http://172.17.0.1:9091"
+    grafana_api_key: "{{ grafana_token_file.content | b64decode | trim }}"
+    grafana_url: "https://www.verturus.com"
+

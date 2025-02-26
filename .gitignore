@@ -1,8 +1,10 @@
 minecraft-data
 .env
+.env.yml
 enigmatica
 manifest.json
 modlist.html
+grafana-token.txt
 
 # Terraform files
 .terraform/
