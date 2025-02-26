@@ -45,7 +45,7 @@ services:
     tty: true
     stdin_open: true
     ports:
-      - "9090:9090"
+      - "127.0.0.1:9090:9090" 
     volumes:
       - ../monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
     restart: on-failure
@@ -53,19 +53,6 @@ services:
       minecraft:
         aliases:
           - prometheus
-  grafana:
-    image: grafana/grafana
-    tty: true
-    stdin_open: true
-    ports:
-      - "3000:3000"
-    environment:
-        GF_SERVICEACCOUNTS_ENABLED: "true"
-    restart: on-failure
-    networks:
-      minecraft:
-        aliases:
-          - grafana
 
 networks:
   minecraft:
