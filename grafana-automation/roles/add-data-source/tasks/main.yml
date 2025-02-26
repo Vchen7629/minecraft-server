@@ -1,7 +1,3 @@
-- name: Debug current directory
-  debug:
-    msg: "Current directory is {{ lookup('pipe', 'pwd') }}"
-
 - name: Read token from file
   slurp:
     src: "../grafana-token.txt"

@@ -1,0 +1,27 @@
+- name: Create new admin user
+  uri:
+    url: "https://www.verturus.com/api/admin/users"
+    method: POST
+    headers:
+      Authorization: "Bearer {{ grafana_token_file.content | b64decode | trim }}"
+      Content-Type: "application/json"
+    body_format: json
+    body:
+      name: "New Admin"
+      email: "newadmin@example.com"
+      login: "newadmin"
+      password: "securepassword"
+    status_code: 200,201
+  register: new_admin_result
+  
+- name: Make new user an admin
+  uri:
+    url: "https://www.verturus.com/api/org/users/{{ new_admin_result.json.id }}"
+    method: PATCH
+    headers:
+      Authorization: "Bearer {{ grafana_token_file.content | b64decode | trim }}"
+      Content-Type: "application/json"
+    body_format: json
+    body:
+      role: "Admin"
+    status_code: 200
