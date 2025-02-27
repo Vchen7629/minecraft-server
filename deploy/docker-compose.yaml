@@ -1,3 +1,6 @@
+env_file:
+  - ../.env
+
 services:
   mc:
     image: itzg/minecraft-server:java8
@@ -30,6 +33,9 @@ services:
       OPS: |
         Laserdrago
       TZ: PST
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "password"
+      RCON_PORT: 25575
     volumes:
       - ../enigmatica:/data
     restart: on-failure
@@ -53,6 +59,26 @@ services:
       minecraft:
         aliases:
           - prometheus
+  backup:
+    image: itzg/mc-backup
+    depends-on:
+      mc:
+        condition: service_healthy
+    environment:
+      BACKUP_INTERVAL: "6h"
+      RCON_HOST: mc
+      RCON_PORT: 25575
+      RCON_PASSWORD: "password"
+      BACKUP_METHOD: "restic"
+      RESTIC_REPOSITORY: "s3:s3.amazonaws.com/zephyrus-enigmatica-server-backup"
+      RESTIC_PASSWORD: "password"
+      RESTIC_FORGET_ARGS: "--keep-daily 7 --keep-weekly 4 --keep-monthly 12"
+      AWS_ACCESS_KEY_ID: aws-access-key
+      AWS_SECRET_ACCESS_KEY: aws-secret-access-key
+      AWS_DEFAULT_REGION: "us-west-1"
+    volumes:
+      - ../enigmatica:/data:ro
+    restart: always
 
 networks:
   minecraft:
