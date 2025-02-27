@@ -1,20 +1,43 @@
-- name: Read token from file
-  slurp:
-    src: "../grafana-token.txt"
-  register: grafana_token_file
+  - name: Read token from file
+    slurp:
+      src: "../grafana-token.txt"
+    register: grafana_token_file
 
-- name: Download Json for Dashboard in Grafana
-  uri:
-    url: "https://grafana.com/api/dashboards/16508/revisions/1/download"
-    return_content: yes
-  register: dashboard_json
+  - name: Get Folder Id from file
+    slurp: 
+      src: "../folder-id.txt"
+    register: folder_result
 
-- name: Replace data source references in the dashboard JSON
-  set_fact:
-    modified_json: "{{ dashboard_json.content | regex_replace('\\${DS_PROMETHEUS}', minecraft_prometheus_datasource) }}"
-    
-- name: Import the modified dashboard to Grafana
-  community.grafana.grafana_dashboard:
-    grafana_url: "https://www.verturus.com"
-    grafana_api_key: "{{ grafana_token_file.content | b64decode | trim }}"
-    dashboard_json: "{{ modified_json }}"
+  - name: Set folder id
+    set_fact:
+      folder_id: "{{ folder_result.content | b64decode  }}"
+
+  - name: Download dashboard JSON
+    uri:
+      url: "https://grafana.com/api/dashboards/16508/revisions/1/download"
+      return_content: yes
+    register: dashboard_json
+
+  - name: Replace datasource
+    set_fact:
+      modified_json: "{{ dashboard_json.content | regex_replace('\\$\\{DS_PROMETHEUS\\}', 'MC_PROMETHEUS') | from_json }}"
+
+  - name: Remove id field from dashboard JSON
+    set_fact:
+      modified_json: "{{ modified_json | combine({'id': None}) }}"
+      
+  - name: Import modified dashboard
+    uri:
+      url: "https://www.verturus.com/api/dashboards/db"
+      method: POST
+      headers:
+        Accept: "application/json"
+        Content-Type: "application/json"
+        Authorization: "Bearer {{ grafana_token_file.content | b64decode | trim }}"
+      body_format: json
+      body:
+        dashboard: "{{ modified_json }}"
+        overwrite: true
+        folderUId: "{{ folder_id }}"
+      status_code: 200
+    register: dashboard_result

@@ -5,6 +5,7 @@ enigmatica
 manifest.json
 modlist.html
 grafana-token.txt
+folder-id.txt
 
 # Terraform files
 .terraform/
