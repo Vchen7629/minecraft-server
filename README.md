@@ -10,7 +10,7 @@
   <li>Ansible: Can be installed following: https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html</li>
 </ul>
 <h3>Setting Up</h3>
-<p>1. <pre>cd deploy/</pre>/</p>
+1. <code>cd copy</code>
 <p>2. `touch .env</p>
 <p>3. `docker compose up -d </p>
 
