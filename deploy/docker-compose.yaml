@@ -1,6 +1,3 @@
-env_file:
-  - ../.env
-
 services:
   mc:
     image: itzg/minecraft-server:java8
@@ -61,7 +58,7 @@ services:
           - prometheus
   backup:
     image: itzg/mc-backup
-    depends-on:
+    depends_on:
       mc:
         condition: service_healthy
     environment:
@@ -73,12 +70,17 @@ services:
       RESTIC_REPOSITORY: "s3:s3.amazonaws.com/zephyrus-enigmatica-server-backup"
       RESTIC_PASSWORD: "password"
       RESTIC_FORGET_ARGS: "--keep-daily 7 --keep-weekly 4 --keep-monthly 12"
-      AWS_ACCESS_KEY_ID: aws-access-key
-      AWS_SECRET_ACCESS_KEY: aws-secret-access-key
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_DEFAULT_REGION: "us-west-1"
     volumes:
-      - ../enigmatica:/data:ro
+      - ../enigmatica:/data
+    networks:
+      minecraft:
+        aliases:
+          - backup
     restart: always
+
 
 networks:
   minecraft:

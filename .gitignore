@@ -6,6 +6,7 @@ manifest.json
 modlist.html
 grafana-token.txt
 folder-id.txt
+autossh.log
 
 # Terraform files
 .terraform/
