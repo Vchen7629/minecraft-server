@@ -11,8 +11,8 @@
 </ul>
 <h3>Setting Up</h3>
 1. <code>cd copy</code>
-<p>2. `touch .env</p>
-<p>3. `docker compose up -d </p>
+2. <code>touch .env</code><p>
+3. <code>docker compose up -d</code>
 
 
 <h2>Monitoring</h2>
