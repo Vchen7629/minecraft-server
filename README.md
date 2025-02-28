@@ -15,8 +15,9 @@
 <p>3. <code>docker compose up -d</code></p>
 
 <p>Add your aws access and secret key to the .env file like:</p>
-<code>AWS_ACCESS_KEY="your access key here"</code>
-<code>AWS_SECRET_ACCESS_KEY="your secret access key here"</code>
+
+<pre><code>AWS_ACCESS_KEY="your access key here"</code></pre>
+<pre><code>AWS_SECRET_ACCESS_KEY="your secret access key here"</code></pre>
 
 
 <h2>Monitoring</h2>
