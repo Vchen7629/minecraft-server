@@ -39,28 +39,10 @@ services:
     mem_limit: 8G
     mem_reservation: 6G
     cpus: 6
-    networks:
-      minecraft:
-        aliases:
-          - minecraft
-  prometheus:
-    image: bitnami/prometheus
-    tty: true
-    stdin_open: true
-    ports:
-      - "127.0.0.1:9090:9090" 
-    volumes:
-      - ../monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
-    restart: on-failure
-    networks:
-      minecraft:
-        aliases:
-          - prometheus
   backup:
     image: itzg/mc-backup
     depends_on:
-      mc:
-        condition: service_healthy
+      - mc  
     environment:
       BACKUP_INTERVAL: "6h"
       RCON_HOST: mc
